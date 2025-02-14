@@ -1,13 +1,14 @@
+import OverViewCard from './components/OverViewCard';
+import './dashboard.css'
+
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="bg-red-500 text-white p-4">
-        Tailwind should turn this red!
+    <div className="dashboard-wrapper">
+      <div className="summary-cards">
+        <OverViewCard type="Balance" amount="10,000" />
+        <OverViewCard type="Income" amount="10,000" />
+        <OverViewCard type="Expense" amount="10,000" />
       </div>
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-      </footer>
     </div>
   );
 }

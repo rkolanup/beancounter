@@ -1,0 +1,8 @@
+.dashboard-wrapper {
+    @apply flex p-8 m-8
+}
+
+.summary-cards {
+    width: 60%;
+    @apply mt-8 grid grid-cols-3 gap-4
+}
