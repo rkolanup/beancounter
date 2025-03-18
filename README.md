@@ -34,4 +34,4 @@ A full-stack **Personal Finance Manager** for tracking income, expenses, and bud
 1. **Clone the repository**  
    ```sh
    git clone https://github.com/rkolanup/beancounter.git
-   cd bean-counter/api
+   cd bean-counter/backend

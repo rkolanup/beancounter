@@ -1,4 +1,4 @@
-// src/swagger.ts
+
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import dotenv from "dotenv";
@@ -9,9 +9,9 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'APIs List',
+            title: 'TTB COLA Search APIs',
             version: '1.0.0',
-            description: 'API documentation for Bean-Counter service',
+            description: 'API documentation for the ttb-cola-search-service service',
         },
         servers: [
             {
@@ -19,7 +19,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./src/controllers/*.ts'], // Adjust this path based on your folder structure
+    apis: ['./src/*.controller.ts']
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
