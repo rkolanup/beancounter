@@ -10,10 +10,10 @@ export class Transaction {
     @Column({ type: 'decimal' })
     amount: number;
 
-    // @Column({name : ""})
-    // category: string;
+    @Column({ name: "expense_type", type: 'varchar', default: 'variable' })
+    expensetype: 'fixed' | 'variable';
 
-    @Column({ name: 'type' })
+    @Column({ name: 'type', type: 'varchar', default: 'expense' })
     type: 'income' | 'expense';
 
     @Column()

@@ -9,9 +9,9 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'TTB COLA Search APIs',
+            title: 'BeanCounter APIs',
             version: '1.0.0',
-            description: 'API documentation for the ttb-cola-search-service service',
+            description: 'API documentation for your project',
         },
         servers: [
             {
@@ -19,7 +19,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./src/*.controller.ts']
+    apis: ['./src/routes/*.ts'],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
