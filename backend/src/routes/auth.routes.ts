@@ -6,7 +6,7 @@ const authController = new AuthController();
 
 /**
  * @swagger
- * /api/register:
+ * /register:
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
@@ -31,7 +31,7 @@ const authController = new AuthController();
  */
 /**
  * @swagger
- * /api/login:
+ * /login:
  *   post:
  *     summary: Login a user
  *     tags: [Auth]

@@ -9,6 +9,10 @@ export class Category {
     @Column({ unique: true })
     name: string;
 
+    @Column({ type: 'text', nullable: true, default: null })
+    description: string | null;
+
+
     @OneToMany(() => Transaction, (transaction) => transaction.category)
     transactions: Transaction[];
 }

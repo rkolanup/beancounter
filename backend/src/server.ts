@@ -3,7 +3,7 @@ import swagger from "./swagger";
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import dotenv from "dotenv";
-import router from "./routes/auth.routes"
+import appRoutes from "./routes/app.routes"
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ server.use(cors());
 server.use(express.json());
 
 // Use the user registration routes
-server.use("/api", router);
+server.use("/api", appRoutes);
 
 // Set up Swagger UI
 server.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swagger.swaggerDocs));
