@@ -4,13 +4,17 @@ import { Category } from '../db/entities/categorie.entity';
 export class CategoryService {
     private categoryRepo = AppDataSource.getRepository(Category);
 
-    async createCategory(name: string) {
+    async createCategory(name: string, description?: string) {
         const existing = await this.categoryRepo.findOne({ where: { name } });
 
-        if (existing)
+        if (existing) {
             throw new Error('Category already exists');
+        }
 
-        const category = this.categoryRepo.create({ name });
+        const category = this.categoryRepo.create({
+            name,
+            description: description || null, // Ensure description is optional
+        });
 
         return await this.categoryRepo.save(category);
     }

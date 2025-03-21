@@ -6,12 +6,14 @@ const categoryService = new CategoryService();
 export class CategoryController {
     async create(req: Request, res: Response) {
         try {
-            const category = await categoryService.createCategory(req.body.name);
-            res.status(201).json(category);
+            const { name, description } = req.body;
+            const created = await categoryService.createCategory(name, description);
+            res.status(201).json(created);
         } catch (err: any) {
             res.status(400).json({ message: err.message });
         }
     }
+
 
     async getAll(req: Request, res: Response) {
         const categories = await categoryService.getAllCategories();
