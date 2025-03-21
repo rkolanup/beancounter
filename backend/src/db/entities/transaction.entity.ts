@@ -19,6 +19,12 @@ export class Transaction {
     @Column()
     description: string;
 
+    @Column({ type: 'varchar' })
+    month: number;
+
+    @Column({ type: 'varchar' })
+    year: number;
+
     @Column()
     date: Date;
 
