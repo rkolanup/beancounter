@@ -93,7 +93,7 @@ export default function CategoryPage() {
 
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow rounded-2xl">
-            <h1 className="text-2xl font-bold mb-6">Categories List</h1>
+            <h1 className="text-2xl font-bold mb-6 text-center">Categories List</h1>
 
             <form onSubmit={handleAddCategory} className="flex gap-4 mb-6">
                 <TextField

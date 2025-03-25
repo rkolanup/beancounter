@@ -65,7 +65,7 @@ router.get('/category', (req, res) => categoryController.getAll(req, res));
 router.put('/category/:id', (req, res) => categoryController.update(req, res));
 
 /**
- * @swagger
+ * 
  * /api/category/{id}:
  *   delete:
  *     summary: Delete a category
@@ -80,6 +80,6 @@ router.put('/category/:id', (req, res) => categoryController.update(req, res));
  *       200:
  *         description: Category deleted
  */
-router.delete('/category/:id', (req, res) => categoryController.delete(req, res));
+//router.delete('/category/:id', (req, res) => categoryController.delete(req, res));
 
 export default router;
