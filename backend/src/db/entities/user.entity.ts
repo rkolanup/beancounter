@@ -21,9 +21,6 @@ export class User {
     @Column()
     password: string;
 
-    @OneToMany(() => Transaction, (transaction) => transaction.user)
-    transactions: Transaction[];
-
     @OneToMany(() => Budget, (budget) => budget.user)
     budgets: Budget[];
 
