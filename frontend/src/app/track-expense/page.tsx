@@ -9,6 +9,7 @@ import {
     Typography,
     Autocomplete,
     Paper,
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
 } from "@mui/material";
 import api from "../lib/axios";
 
@@ -18,6 +19,7 @@ export default function TrackExpensePage() {
 
     const [categories, setCategories] = useState<any[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<any>(null);
+    const [transactionSummary, setTransactionSummary] = useState<any[]>([]);
 
     const [formData, setFormData] = useState({
         month: lastMonth === 0 ? 12 : lastMonth,
@@ -32,7 +34,7 @@ export default function TrackExpensePage() {
         const fetchCategories = async () => {
             try {
                 const res = await api.get("/category");
-                setCategories(res.data); // Expects [{ id: 1, name: "Food" }, ...]
+                setCategories(res.data);
             } catch (err) {
                 console.error("Failed to fetch categories", err);
             }
@@ -45,14 +47,41 @@ export default function TrackExpensePage() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
+        const today = new Date().toISOString().split('T')[0]
         const payload = {
-            ...formData,
-            categoryId: selectedCategory?.id || null,
+            amount: parseFloat(formData.amount), // Convert string to number if needed
+            expenseType: formData.expenseType,
+            type: formData.transactionType,
+            description: formData.notes,
+            month: formData.month,
+            year: formData.year,
+            date: today,
+            category: {
+                id: selectedCategory?.id || null,
+            },
         };
+
         console.log("Submitting:", payload);
-        // api.post("/transactions", payload);
+        //api.post("/transactions", payload);
+        try {
+            const res = await api.post("/transactions", payload);
+            console.log("Response:", res.data);
+            setTransactionSummary(res.data);
+
+            setFormData({
+                month: lastMonth === 0 ? 12 : lastMonth,
+                year: currentYear,
+                expenseType: "variable",
+                transactionType: "expense",
+                amount: "",
+                notes: "",
+            });
+            setSelectedCategory(null);
+        } catch (err) {
+            console.error("Failed to save transaction", err);
+        }
     };
 
     const months = Array.from({ length: 12 }, (_, i) => ({
@@ -117,6 +146,31 @@ export default function TrackExpensePage() {
                 </div>
 
             </Box>
+            {transactionSummary.length > 0 && (
+                <>
+                    <Typography variant="h5" className="mt-10 mb-4">Transaction Summary</Typography>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Category</TableCell>
+                                    <TableCell>Total Amount</TableCell>
+                                    <TableCell>Description</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactionSummary.map((item, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{item.category}</TableCell>
+                                        <TableCell>${parseFloat(item.totalAmount).toFixed(2)}</TableCell>
+                                        <TableCell>{item.description}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </>
+            )}
         </div>
     );
 }

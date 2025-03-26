@@ -14,31 +14,17 @@ export class TransactionService {
         return await this.transactionRepo.save(transaction);
     }
 
-    // async getTotalByCategories(): Promise<any[]> {
-    //     const result = await this.transactionRepo
-    //         .createQueryBuilder('transaction')
-    //         .leftJoin('transaction.category', 'category')
-    //         .select('category.name', 'categoryName')
-    //         .addSelect('SUM(transaction.amount)', 'total')
-    //         .addSelect('STRING_AGG(transaction.description, \', \')', 'descriptions')
-    //         .groupBy('category.name')
-    //         .getRawMany();
-
-    //     return result;
-    // }
-
-    async getTotalByCategoriesWithDateRange(startDate: string, endDate: string): Promise<any[]> {
-        const result = await this.transactionRepo
+    async getTransactionsSummaryByMonth(month: string, year: string) {
+        return this.transactionRepo
             .createQueryBuilder('transaction')
             .leftJoin('transaction.category', 'category')
-            .select('category.name', 'categoryName')
-            .addSelect('SUM(transaction.amount)', 'total')
-            .addSelect('STRING_AGG(transaction.description, \', \')', 'descriptions')
-            .where('transaction.date BETWEEN :startDate AND :endDate', { startDate, endDate })
+            .select('category.name', 'category')
+            .addSelect('SUM(transaction.amount)', 'totalAmount')
+            .addSelect("STRING_AGG(transaction.description, ', ')", 'description')
+            .where('transaction.month = :month', { month })
+            .andWhere('transaction.year = :year', { year })
             .groupBy('category.name')
             .getRawMany();
-
-        return result;
     }
 
 }
