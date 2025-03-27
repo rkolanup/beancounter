@@ -15,16 +15,21 @@ export class TransactionService {
     }
 
     async getTransactionsSummaryByMonth(month: string, year: string) {
+        const startDate = new Date(`${year}-${month}-01`);
+        const endDate = new Date(startDate);
+        endDate.setMonth(startDate.getMonth() + 1);
+        endDate.setDate(0);
+
         return this.transactionRepo
-            .createQueryBuilder('transaction')
-            .leftJoin('transaction.category', 'category')
-            .select('category.name', 'category')
-            .addSelect('SUM(transaction.amount)', 'totalAmount')
-            .addSelect("STRING_AGG(transaction.description, ', ')", 'description')
-            .where('transaction.month = :month', { month })
-            .andWhere('transaction.year = :year', { year })
-            .groupBy('category.name')
+            .createQueryBuilder('transactions')
+            .leftJoin('transactions.category', 'categories')
+            .select('categories.name', 'category')
+            .addSelect('SUM(transactions.amount)', 'totalAmount')
+            .addSelect("STRING_AGG(transactions.description, ', ')", 'description')
+            .where('transactions.date BETWEEN :startDate AND :endDate', { startDate, endDate })
+            .groupBy('categories.name')
             .getRawMany();
     }
+
 
 }

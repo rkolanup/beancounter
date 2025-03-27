@@ -46,7 +46,7 @@ const transactionController = new TransactionController();
 router.post('/transactions', transactionController.create.bind(transactionController));
 
 /**
- *
+ * @swagger
  * /transactions/summary:
  *   get:
  *     summary: Get transaction summary by month and year (sum by category)
@@ -57,7 +57,7 @@ router.post('/transactions', transactionController.create.bind(transactionContro
  *         schema:
  *           type: string
  *         required: true
- *         description: Month of the transactions (e.g., "March")
+ *         description: Month of the transactions (e.g., "3")
  *       - in: query
  *         name: year
  *         schema:
@@ -67,22 +67,11 @@ router.post('/transactions', transactionController.create.bind(transactionContro
  *     responses:
  *       200:
  *         description: Successfully retrieved transaction summary
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   categoryId:
- *                     type: number
- *                   totalAmount:
- *                     type: number
  *       400:
  *         description: Month and year are required
  *       500:
  *         description: Internal server error
  */
-//router.get('/transactions/summary', transactionController.getSummaryByMonth.bind(transactionController));
+router.get('/transactions/summary', transactionController.getSummaryByMonth.bind(transactionController));
 
 export default router;

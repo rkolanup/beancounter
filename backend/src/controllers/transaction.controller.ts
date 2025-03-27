@@ -20,21 +20,23 @@ export class TransactionController {
         }
     }
 
-    async getSummaryByMonth(req: Request, res: Response) {
+    async getSummaryByMonth(req: Request, res: Response): Promise<void> {
         try {
             const { month, year } = req.query;
+
             if (!month || !year) {
-                return res.status(400).json({ message: 'Month and year are required' });
+                res.status(400).json({ message: 'Month and year are required' });
+                return;
             }
-            const summary = await transactionService.getTransactionsSummaryByMonth(
-                String(month),
-                String(year)
-            );
+
+            const summary = await transactionService.getTransactionsSummaryByMonth(month as string, year as string);
             res.status(200).json(summary);
         } catch (err: any) {
-            res.status(500).json({ message: err.message });
+            res.status(400).json({ message: err.message });
         }
     }
+
+
 
 
 
