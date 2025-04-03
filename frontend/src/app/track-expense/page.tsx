@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
     Box,
     TextField,
@@ -10,6 +10,7 @@ import {
     Autocomplete,
     Paper,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    TableSortLabel,
 } from "@mui/material";
 import api from "../lib/axios";
 import DownloadExcelButton from "../components/DownloadExcelButton";
@@ -24,6 +25,9 @@ export default function TrackExpensePage() {
     const [transactionSummary, setTransactionSummary] = useState<any[]>([]);
     const [formTouched, setFormTouched] = useState(false);
 
+    const [sortBy, setSortBy] = useState("category");
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
     const [formData, setFormData] = useState({
         month: lastMonth === 0 ? 12 : lastMonth,
         year: currentYear,
@@ -32,6 +36,27 @@ export default function TrackExpensePage() {
         amount: "",
         notes: "",
     });
+
+    const handleSort = (field: string) => {
+        if (sortBy === field) {
+            // Toggle direction
+            setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+        } else {
+            setSortBy(field);
+            setSortDirection("asc");
+        }
+    };
+
+    const sortedTransactions = useMemo(() => {
+        return [...transactionSummary].sort((a, b) => {
+            let aValue = sortBy === "totalAmount" ? parseFloat(a[sortBy]) : a[sortBy];
+            let bValue = sortBy === "totalAmount" ? parseFloat(b[sortBy]) : b[sortBy];
+
+            if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+            if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+            return 0;
+        });
+    }, [transactionSummary, sortBy, sortDirection]);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -130,7 +155,7 @@ export default function TrackExpensePage() {
     }));
 
     return (
-        <div className="max-w-6xl mx-auto mt-10 space-y-8" style={{ marginLeft: 325, }}>
+        <div className="max-w-6xl mx-auto space-y-8" style={{ marginLeft: 325, }}>
             {/* Form Card */}
             <div className="p-6 bg-white shadow rounded-2xl">
                 <h1 className="text-2xl font-bold mb-6 text-center">Add Expenses</h1>
@@ -210,19 +235,47 @@ export default function TrackExpensePage() {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Category</TableCell>
-                                    <TableCell>Total Amount</TableCell>
-                                    <TableCell>Description</TableCell>
+                                    <TableCell sortDirection={sortBy === "category" ? sortDirection : false}>
+                                        <TableSortLabel
+                                            active={sortBy === "category"}
+                                            direction={sortDirection}
+                                            onClick={() => handleSort("category")}
+                                            className="table-heading"
+                                        >
+                                            Category
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell sortDirection={sortBy === "totalAmount" ? sortDirection : false}>
+                                        <TableSortLabel
+                                            active={sortBy === "totalAmount"}
+                                            direction={sortDirection}
+                                            onClick={() => handleSort("totalAmount")}
+                                            className="table-heading"
+                                        >
+                                            Total Amount
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell className="table-heading">Description</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {transactionSummary.map((item, index) => (
+                                {sortedTransactions.map((item, index) => (
                                     <TableRow key={index}>
                                         <TableCell>{item.category}</TableCell>
                                         <TableCell>${parseFloat(item.totalAmount).toFixed(2)}</TableCell>
                                         <TableCell>{item.description}</TableCell>
                                     </TableRow>
                                 ))}
+                                <TableRow>
+                                    <TableCell className="table-heading">Total</TableCell>
+                                    <TableCell className="table-heading">
+                                        $
+                                        {transactionSummary
+                                            .reduce((sum, item) => sum + parseFloat(item.totalAmount), 0)
+                                            .toFixed(2)}
+                                    </TableCell>
+                                    <TableCell />
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>

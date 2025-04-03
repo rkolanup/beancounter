@@ -13,7 +13,8 @@ import {
     TableHead,
     TableRow,
     Paper,
-    IconButton
+    IconButton,
+    TableSortLabel
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -30,6 +31,7 @@ export default function CategoryPage() {
     const [selectedCategory, setSelectedCategory] = useState<Category | string | null>(null);
     const [descriptionInput, setDescriptionInput] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
     const fetchCategories = async () => {
         try {
@@ -39,6 +41,16 @@ export default function CategoryPage() {
             console.error("Failed to fetch categories", err);
         }
     };
+
+    const handleSortByName = () => {
+        setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    };
+
+    const sortedCategories = [...categories].sort((a, b) => {
+        if (a.name < b.name) return sortDirection === "asc" ? -1 : 1;
+        if (a.name > b.name) return sortDirection === "asc" ? 1 : -1;
+        return 0;
+    });
 
     const handleAddCategory = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -92,7 +104,7 @@ export default function CategoryPage() {
     }, []);
 
     return (
-        <div className="max-w-4xl mt-10 p-6 bg-white shadow rounded-2xl" style={{ marginLeft: 500, }}>
+        <div className="max-w-4xl p-6 bg-white shadow rounded-2xl" style={{ marginLeft: 500, }}>
             <h1 className="text-2xl font-bold mb-6 text-center">Categories List</h1>
 
             <form onSubmit={handleAddCategory} className="flex gap-4 mb-6">
@@ -149,7 +161,15 @@ export default function CategoryPage() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Name</TableCell>
+                            <TableCell sortDirection={sortDirection}>
+                                <TableSortLabel
+                                    active
+                                    direction={sortDirection}
+                                    onClick={handleSortByName}
+                                >
+                                    Category
+                                </TableSortLabel>
+                            </TableCell>
                             <TableCell>Description</TableCell>
                             <TableCell align="right">Actions</TableCell>
                         </TableRow>
