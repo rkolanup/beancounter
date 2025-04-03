@@ -92,7 +92,7 @@ export default function CategoryPage() {
     }, []);
 
     return (
-        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow rounded-2xl">
+        <div className="max-w-4xl mt-10 p-6 bg-white shadow rounded-2xl" style={{ marginLeft: 500, }}>
             <h1 className="text-2xl font-bold mb-6 text-center">Categories List</h1>
 
             <form onSubmit={handleAddCategory} className="flex gap-4 mb-6">
@@ -161,7 +161,7 @@ export default function CategoryPage() {
                                 <TableCell>{category.description || '—'}</TableCell>
                                 <TableCell align="right">
                                     <IconButton sx={{ color: 'var(--text-color)' }} size="small" aria-label="Edit Category" onClick={() => handleEditCategory(category)}>< EditIcon /></IconButton>
-                                    <IconButton sx={{ color: 'var(--danger-color)' }} size="small" aria-label="Delete Category" onClick={() => handleDeleteCategory(category.id)}>< DeleteRoundedIcon /></IconButton>
+                                    {/* <IconButton sx={{ color: 'var(--danger-color)' }} size="small" aria-label="Delete Category" onClick={() => handleDeleteCategory(category.id)}>< DeleteRoundedIcon /></IconButton> */}
                                 </TableCell>
                             </TableRow>
                         ))}

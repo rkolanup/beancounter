@@ -15,16 +15,56 @@ export class TransactionService {
     }
 
     async getTransactionsSummaryByMonth(month: string, year: string) {
-        return this.transactionRepo
-            .createQueryBuilder('transaction')
-            .leftJoin('transaction.category', 'category')
-            .select('category.name', 'category')
-            .addSelect('SUM(transaction.amount)', 'totalAmount')
-            .addSelect("STRING_AGG(transaction.description, ', ')", 'description')
-            .where('transaction.month = :month', { month })
-            .andWhere('transaction.year = :year', { year })
-            .groupBy('category.name')
+        const startDate = new Date(`${year}-${month}-01`);
+        const endDate = new Date(startDate);
+        endDate.setMonth(startDate.getMonth() + 1);
+        endDate.setDate(0);
+
+        const rawSummary = this.transactionRepo
+            .createQueryBuilder('transactions')
+            .leftJoin('transactions.category', 'categories')
+            .select('categories.name', 'category')
+            .addSelect('SUM(transactions.amount)', 'totalAmount')
+            .addSelect("STRING_AGG(transactions.description, ', ')", 'description')
+            .where('transactions.date BETWEEN :startDate AND :endDate', { startDate, endDate })
+            .groupBy('categories.name')
             .getRawMany();
+
+        return (await rawSummary).map(row => ({
+            ...row,
+            description: row.description
+                ?.split(',')
+                .map((desc: string) => desc.trim())
+                .filter((desc: string) => desc !== '')
+                .join(', ')
+        }));
     }
+
+    async getTransactionsSummaryForMonth(month: string, year: string) {
+        // const startDate = new Date(`${year}-${month}-01`);
+        // const endDate = new Date(startDate);
+        // endDate.setMonth(startDate.getMonth() + 1);
+        // endDate.setDate(0);
+
+        const rawSummary = this.transactionRepo
+            .createQueryBuilder('transactions')
+            .leftJoin('transactions.category', 'categories')
+            .select('categories.name', 'category')
+            .addSelect('SUM(transactions.amount)', 'totalAmount')
+            .addSelect("STRING_AGG(transactions.description, ', ')", 'description')
+            .where('transactions.month = :month AND transactions.year = :year', { month, year })
+            .groupBy('categories.name')
+            .getRawMany();
+
+        return (await rawSummary).map(row => ({
+            ...row,
+            description: row.description
+                ?.split(',')
+                .map((desc: string) => desc.trim())
+                .filter((desc: string) => desc !== '')
+                .join(', ')
+        }));
+    }
+
 
 }
