@@ -33,6 +33,10 @@ export default function CategoryPage() {
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
+    const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+    const [editingName, setEditingName] = useState("");
+    const [editingDescription, setEditingDescription] = useState("");
+
     const fetchCategories = async () => {
         try {
             const res = await api.get("/category"); // Backend GET /categories
@@ -81,11 +85,18 @@ export default function CategoryPage() {
         }
     };
 
+    // const handleEditCategory = (category: Category) => {
+    //     setCategoryInput(category.name);
+    //     setDescriptionInput(category.description || '');
+    //     setSelectedCategoryId(category.id); // Add this to state to track editing
+    // };
+
     const handleEditCategory = (category: Category) => {
-        setCategoryInput(category.name);
-        setDescriptionInput(category.description || '');
-        setSelectedCategoryId(category.id); // Add this to state to track editing
+        setEditingCategoryId(category.id);
+        setEditingName(category.name);
+        setEditingDescription(category.description || "");
     };
+
 
     const handleDeleteCategory = async (categoryId: number) => {
         if (!confirm("Are you sure you want to delete this category?")) return;
@@ -97,7 +108,26 @@ export default function CategoryPage() {
         }
     };
 
+    const handleSaveEdit = async () => {
+        try {
+            await api.put(`/category/${editingCategoryId}`, {
+                name: editingName.trim(),
+                description: editingDescription.trim(),
+            });
+            setEditingCategoryId(null);
+            setEditingName("");
+            setEditingDescription("");
+            fetchCategories();
+        } catch (err) {
+            console.error("Failed to save edited category", err);
+        }
+    };
 
+    const handleCancelEdit = () => {
+        setEditingCategoryId(null);
+        setEditingName("");
+        setEditingDescription("");
+    };
 
     useEffect(() => {
         fetchCategories();
@@ -107,7 +137,7 @@ export default function CategoryPage() {
         <div className="max-w-4xl p-6 bg-white shadow rounded-2xl" style={{ marginLeft: 500, }}>
             <h1 className="text-2xl font-bold mb-6 text-center">Categories List</h1>
 
-            <form onSubmit={handleAddCategory} className="flex gap-4 mb-6">
+            {/* <form onSubmit={handleAddCategory} className="flex gap-4 mb-6">
                 <TextField
                     label="Category Name"
                     variant="outlined"
@@ -131,7 +161,7 @@ export default function CategoryPage() {
                 >
                     {selectedCategoryId ? "Edit" : "Add"}
                 </button>
-            </form>
+            </form> */}
 
 
             {/* <form onSubmit={handleAddCategory} className="flex items-center gap-4 mb-6">
@@ -175,19 +205,93 @@ export default function CategoryPage() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {categories.map((category) => (
+                        {/* {categories.map((category) => (
                             <TableRow key={category.id}>
                                 <TableCell>{category.name}</TableCell>
                                 <TableCell>{category.description || '—'}</TableCell>
                                 <TableCell align="right">
                                     <IconButton sx={{ color: 'var(--text-color)' }} size="small" aria-label="Edit Category" onClick={() => handleEditCategory(category)}>< EditIcon /></IconButton>
-                                    {/* <IconButton sx={{ color: 'var(--danger-color)' }} size="small" aria-label="Delete Category" onClick={() => handleDeleteCategory(category.id)}>< DeleteRoundedIcon /></IconButton> */}
+                                    <IconButton sx={{ color: 'var(--danger-color)' }} size="small" aria-label="Delete Category" onClick={() => handleDeleteCategory(category.id)}>< DeleteRoundedIcon /></IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))} */}
+                        <TableRow>
+                            <TableCell>
+                                <TextField
+                                    variant="standard"
+                                    value={categoryInput}
+                                    onChange={(e) => setCategoryInput(e.target.value)}
+                                    placeholder="New category name"
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <TextField
+                                    variant="standard"
+                                    value={descriptionInput}
+                                    onChange={(e) => setDescriptionInput(e.target.value)}
+                                    placeholder="New description"
+                                />
+                            </TableCell>
+                            <TableCell align="right">
+                                <Button
+                                    onClick={handleAddCategory}
+                                    size="small"
+                                    disabled={!categoryInput.trim()}
+                                    style={{ color: "#451b03" }}
+                                >
+                                    Add
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+
+
+                        {sortedCategories.map((category) => (
+                            <TableRow key={category.id}>
+                                <TableCell>
+                                    {editingCategoryId === category.id ? (
+                                        <TextField
+                                            value={editingName}
+                                            onChange={(e) => setEditingName(e.target.value)}
+                                            variant="standard"
+                                        />
+                                    ) : (
+                                        category.name
+                                    )}
+                                </TableCell>
+                                <TableCell>
+                                    {editingCategoryId === category.id ? (
+                                        <TextField
+                                            value={editingDescription}
+                                            onChange={(e) => setEditingDescription(e.target.value)}
+                                            variant="standard"
+                                        />
+                                    ) : (
+                                        category.description || '—'
+                                    )}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {editingCategoryId === category.id ? (
+                                        <>
+                                            <Button size="small" style={{ color: "#451b03" }} onClick={handleSaveEdit}>Save</Button>
+                                            <Button size="small" style={{ color: "#451b03" }} onClick={handleCancelEdit}>Cancel</Button>
+                                        </>
+                                    ) : (
+                                        <IconButton
+                                            sx={{ color: 'var(--text-color)' }}
+                                            size="small"
+                                            aria-label="Edit Category"
+                                            onClick={() => handleEditCategory(category)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}
+
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div>
+        </div >
     );
 }

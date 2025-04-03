@@ -12,7 +12,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     const handleDrawerClose = () => setOpen(false);
 
     return (
-        <Box sx={{ display: "flex" }}>
+        <div className="flex">
             <CssBaseline />
             <Header open={open} handleDrawerOpen={handleDrawerOpen} />
             <SideNav open={open} handleDrawerClose={handleDrawerClose} />
@@ -37,6 +37,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <Toolbar />
                 <div>{children}</div>
             </Box>
-        </Box>
+        </div>
     );
 }
