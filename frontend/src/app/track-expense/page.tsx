@@ -155,132 +155,134 @@ export default function TrackExpensePage() {
     }));
 
     return (
-        <div className="max-w-6xl mx-auto space-y-8" style={{ marginLeft: 325, }}>
-            {/* Form Card */}
-            <div className="p-6 bg-white shadow rounded-2xl">
-                <h1 className="text-2xl font-bold mb-6 text-center">Add Expenses</h1>
-
-                <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-                        <TextField select name="month" label="Month" value={formData.month} onChange={handleChange} sx={{ flex: 1 }}>
-                            {months.map((m) => (<MenuItem key={m.value} value={m.value}>{m.label}</MenuItem>))}
-                        </TextField>
-
-                        <TextField name="year" label="Year" type="number" value={formData.year} onChange={handleChange} sx={{ flex: 1 }} />
-
-                        <TextField select name="expenseType" label="Expense Type" value={formData.expenseType} onChange={handleChange} sx={{ flex: 1 }}>
-                            <MenuItem value="fixed">Fixed</MenuItem>
-                            <MenuItem value="variable">Variable</MenuItem>
-                        </TextField>
-
-                        <TextField select name="transactionType" label="Transaction Type" value={formData.transactionType} onChange={handleChange} sx={{ flex: 1 }}>
-                            <MenuItem value="expense">Expense</MenuItem>
-                            <MenuItem value="income">Income</MenuItem>
-                        </TextField>
-                    </Box>
-
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-                        <Autocomplete
-                            options={categories}
-                            getOptionLabel={(option) => option.name}
-                            value={selectedCategory}
-                            onChange={(event, newValue) => setSelectedCategory(newValue)}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Category"
-                                    error={formTouched && !selectedCategory}
-                                />
-                            )}
-                            sx={{ flex: 1 }}
-                        />
-
-                        <TextField
-                            name="amount"
-                            label="Amount"
-                            type="number"
-                            value={formData.amount}
-                            onChange={handleChange}
-                            error={formTouched && (!formData.amount || parseFloat(formData.amount) <= 0)}
-                        />
-
-                        <TextField name="notes" label="Notes" value={formData.notes} onChange={handleChange} sx={{ flex: 1 }} />
-
-                        <div>
-                            <button
-                                type="submit"
-                                className="w-32 h-12 bg-amber-950 text-white rounded-lg hover:bg-amber-900 transition"
-                            >
-                                Submit
-                            </button>
-                        </div>
-                    </Box>
-                </Box>
-            </div>
-
-            {/* Summary Table Card */}
-            {transactionSummary.length > 0 && (
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="max-w-6xl mx-auto space-y-8">
+                {/* Form Card */}
                 <div className="p-6 bg-white shadow rounded-2xl">
-                    <div className="flex justify-between items-center mb-4 px-4">
-                        <Typography variant="h5" className="mb-4">Transaction Summary</Typography>
-                        <DownloadExcelButton data={transactionSummary.map((item) => ({
-                            Category: item.category,
-                            "Total Amount": parseFloat(item.totalAmount).toFixed(2),
-                            Description: item.description,
-                        }))}
-                            filename={`Transaction_Summary_${formData.month}_${formData.year}.xlsx`} />
-                    </div>
+                    <h1 className="text-2xl font-bold mb-6 text-center">Add Expenses</h1>
 
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sortDirection={sortBy === "category" ? sortDirection : false}>
-                                        <TableSortLabel
-                                            active={sortBy === "category"}
-                                            direction={sortDirection}
-                                            onClick={() => handleSort("category")}
-                                            className="table-heading"
-                                        >
-                                            Category
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell sortDirection={sortBy === "totalAmount" ? sortDirection : false}>
-                                        <TableSortLabel
-                                            active={sortBy === "totalAmount"}
-                                            direction={sortDirection}
-                                            onClick={() => handleSort("totalAmount")}
-                                            className="table-heading"
-                                        >
-                                            Total Amount
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell className="table-heading">Description</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {sortedTransactions.map((item, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{item.category}</TableCell>
-                                        <TableCell>${parseFloat(item.totalAmount).toFixed(2)}</TableCell>
-                                        <TableCell>{item.description}</TableCell>
-                                    </TableRow>
-                                ))}
-                                <TableRow>
-                                    <TableCell className="table-heading">Total</TableCell>
-                                    <TableCell className="table-heading">
-                                        $
-                                        {transactionSummary
-                                            .reduce((sum, item) => sum + parseFloat(item.totalAmount), 0)
-                                            .toFixed(2)}
-                                    </TableCell>
-                                    <TableCell />
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                            <TextField select name="month" label="Month" value={formData.month} onChange={handleChange} sx={{ flex: 1 }}>
+                                {months.map((m) => (<MenuItem key={m.value} value={m.value}>{m.label}</MenuItem>))}
+                            </TextField>
+
+                            <TextField name="year" label="Year" type="number" value={formData.year} onChange={handleChange} sx={{ flex: 1 }} />
+
+                            <TextField select name="expenseType" label="Expense Type" value={formData.expenseType} onChange={handleChange} sx={{ flex: 1 }}>
+                                <MenuItem value="fixed">Fixed</MenuItem>
+                                <MenuItem value="variable">Variable</MenuItem>
+                            </TextField>
+
+                            <TextField select name="transactionType" label="Transaction Type" value={formData.transactionType} onChange={handleChange} sx={{ flex: 1 }}>
+                                <MenuItem value="expense">Expense</MenuItem>
+                                <MenuItem value="income">Income</MenuItem>
+                            </TextField>
+                        </Box>
+
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                            <Autocomplete
+                                options={categories}
+                                getOptionLabel={(option) => option.name}
+                                value={selectedCategory}
+                                onChange={(event, newValue) => setSelectedCategory(newValue)}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Category"
+                                        error={formTouched && !selectedCategory}
+                                    />
+                                )}
+                                sx={{ flex: 1 }}
+                            />
+
+                            <TextField
+                                name="amount"
+                                label="Amount"
+                                type="number"
+                                value={formData.amount}
+                                onChange={handleChange}
+                                error={formTouched && (!formData.amount || parseFloat(formData.amount) <= 0)}
+                            />
+
+                            <TextField name="notes" label="Notes" value={formData.notes} onChange={handleChange} sx={{ flex: 1 }} />
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="w-32 h-12 bg-amber-950 text-white rounded-lg hover:bg-amber-900 transition"
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </Box>
+                    </Box>
                 </div>
-            )}
+
+                {/* Summary Table Card */}
+                {transactionSummary.length > 0 && (
+                    <div className="p-6 bg-white shadow rounded-2xl">
+                        <div className="flex justify-between items-center mb-4 px-4">
+                            <Typography variant="h5" className="mb-4">Transaction Summary</Typography>
+                            <DownloadExcelButton data={transactionSummary.map((item) => ({
+                                Category: item.category,
+                                "Total Amount": parseFloat(item.totalAmount).toFixed(2),
+                                Description: item.description,
+                            }))}
+                                filename={`Transaction_Summary_${formData.month}_${formData.year}.xlsx`} />
+                        </div>
+
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell sortDirection={sortBy === "category" ? sortDirection : false}>
+                                            <TableSortLabel
+                                                active={sortBy === "category"}
+                                                direction={sortDirection}
+                                                onClick={() => handleSort("category")}
+                                                className="table-heading"
+                                            >
+                                                Category
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell sortDirection={sortBy === "totalAmount" ? sortDirection : false}>
+                                            <TableSortLabel
+                                                active={sortBy === "totalAmount"}
+                                                direction={sortDirection}
+                                                onClick={() => handleSort("totalAmount")}
+                                                className="table-heading"
+                                            >
+                                                Total Amount
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell className="table-heading">Description</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {sortedTransactions.map((item, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{item.category}</TableCell>
+                                            <TableCell>${parseFloat(item.totalAmount).toFixed(2)}</TableCell>
+                                            <TableCell>{item.description}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                    <TableRow>
+                                        <TableCell className="table-heading">Total</TableCell>
+                                        <TableCell className="table-heading">
+                                            $
+                                            {transactionSummary
+                                                .reduce((sum, item) => sum + parseFloat(item.totalAmount), 0)
+                                                .toFixed(2)}
+                                        </TableCell>
+                                        <TableCell />
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
+                )}
+            </div>
         </div>
     );
 

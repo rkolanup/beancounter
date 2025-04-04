@@ -18,6 +18,8 @@ import {
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { Alert } from "@mui/material";
+
 
 interface Category {
     id: number;
@@ -32,7 +34,7 @@ export default function CategoryPage() {
     const [descriptionInput, setDescriptionInput] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
     const [editingName, setEditingName] = useState("");
     const [editingDescription, setEditingDescription] = useState("");
@@ -56,7 +58,18 @@ export default function CategoryPage() {
         return 0;
     });
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            if (editingCategoryId !== null) {
+                handleSaveEdit();
+            } else {
+                handleAddCategory(e as any); // cast to any since React.FormEvent is expected
+            }
+        }
+    };
+
     const handleAddCategory = async (e: React.FormEvent) => {
+        setErrorMessage(null);
         e.preventDefault();
         try {
             if (!categoryInput.trim()) return;
@@ -80,7 +93,12 @@ export default function CategoryPage() {
             setDescriptionInput("");
             setSelectedCategoryId(null);
             fetchCategories();
-        } catch (err) {
+        } catch (err: any) {
+            if (err.response?.data?.message === "Category already exists") {
+                setErrorMessage("Category already exists");
+            } else {
+                setErrorMessage("Something went wrong while saving the category.");
+            }
             console.error("Failed to add/edit category", err);
         }
     };
@@ -132,166 +150,123 @@ export default function CategoryPage() {
     useEffect(() => {
         fetchCategories();
     }, []);
+    useEffect(() => {
+        if (errorMessage) {
+            const timeout = setTimeout(() => setErrorMessage(null), 3000);
+            return () => clearTimeout(timeout);
+        }
+    }, [errorMessage]);
 
     return (
-        <div className="max-w-4xl p-6 bg-white shadow rounded-2xl" style={{ marginLeft: 500, }}>
-            <h1 className="text-2xl font-bold mb-6 text-center">Categories List</h1>
-
-            {/* <form onSubmit={handleAddCategory} className="flex gap-4 mb-6">
-                <TextField
-                    label="Category Name"
-                    variant="outlined"
-                    fullWidth
-                    value={categoryInput}
-                    onChange={(e) => setCategoryInput(e.target.value)}
-                    required
-                />
-
-                <TextField
-                    label="Description"
-                    variant="outlined"
-                    fullWidth
-                    value={descriptionInput}
-                    onChange={(e) => setDescriptionInput(e.target.value)}
-                />
-
-                <button
-                    type="submit"
-                    className="w-32 h-12 bg-amber-950 text-white rounded-lg hover:bg-amber-900 transition self-end"
-                >
-                    {selectedCategoryId ? "Edit" : "Add"}
-                </button>
-            </form> */}
-
-
-            {/* <form onSubmit={handleAddCategory} className="flex items-center gap-4 mb-6">
-                <Autocomplete
-                    freeSolo
-                    className="w-full"
-                    options={categories}
-                    getOptionLabel={(option) => typeof option === 'string' ? option : option.name}
-                    value={selectedCategory}
-                    inputValue={categoryInput}
-                    onInputChange={(event, newInputValue) => setCategoryInput(newInputValue)}
-                    onChange={(event, newValue) => setSelectedCategory(newValue)}
-                    renderInput={(params) => (
-                        <TextField {...params} label="Category" variant="outlined" fullWidth />
-                    )}
-                />
-                <button
-                    type="submit"
-                    className="w-12 h-12 bg-amber-950 text-white rounded-full flex items-center justify-center hover:bg-amber-900 transition"
-                >
-                    +
-                </button>
-            </form> */}
-
-            {/* MUI Table for Categories */}
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sortDirection={sortDirection}>
-                                <TableSortLabel
-                                    active
-                                    direction={sortDirection}
-                                    onClick={handleSortByName}
-                                >
-                                    Category
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Description</TableCell>
-                            <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {/* {categories.map((category) => (
-                            <TableRow key={category.id}>
-                                <TableCell>{category.name}</TableCell>
-                                <TableCell>{category.description || '—'}</TableCell>
-                                <TableCell align="right">
-                                    <IconButton sx={{ color: 'var(--text-color)' }} size="small" aria-label="Edit Category" onClick={() => handleEditCategory(category)}>< EditIcon /></IconButton>
-                                    <IconButton sx={{ color: 'var(--danger-color)' }} size="small" aria-label="Delete Category" onClick={() => handleDeleteCategory(category.id)}>< DeleteRoundedIcon /></IconButton>
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="max-w-4xl p-6 bg-white shadow rounded-2xl">
+                <h1 className="text-2xl font-bold mb-6 text-center">Categories List</h1>
+                {errorMessage && (
+                    <Alert severity="error" className="mb-4">
+                        {errorMessage}
+                    </Alert>
+                )}
+                {/* MUI Table for Categories */}
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sortDirection={sortDirection}>
+                                    <TableSortLabel
+                                        active
+                                        direction={sortDirection}
+                                        onClick={handleSortByName}
+                                    >
+                                        Category
+                                    </TableSortLabel>
                                 </TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell align="right">Actions</TableCell>
                             </TableRow>
-                        ))} */}
-                        <TableRow>
-                            <TableCell>
-                                <TextField
-                                    variant="standard"
-                                    value={categoryInput}
-                                    onChange={(e) => setCategoryInput(e.target.value)}
-                                    placeholder="New category name"
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <TextField
-                                    variant="standard"
-                                    value={descriptionInput}
-                                    onChange={(e) => setDescriptionInput(e.target.value)}
-                                    placeholder="New description"
-                                />
-                            </TableCell>
-                            <TableCell align="right">
-                                <Button
-                                    onClick={handleAddCategory}
-                                    size="small"
-                                    disabled={!categoryInput.trim()}
-                                    style={{ color: "#451b03" }}
-                                >
-                                    Add
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-
-
-                        {sortedCategories.map((category) => (
-                            <TableRow key={category.id}>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
                                 <TableCell>
-                                    {editingCategoryId === category.id ? (
-                                        <TextField
-                                            value={editingName}
-                                            onChange={(e) => setEditingName(e.target.value)}
-                                            variant="standard"
-                                        />
-                                    ) : (
-                                        category.name
-                                    )}
+                                    <TextField
+                                        variant="standard"
+                                        value={categoryInput}
+                                        onChange={(e) => setCategoryInput(e.target.value)}
+                                        onKeyDown={handleKeyDown}
+                                        placeholder="New category name"
+                                    />
                                 </TableCell>
                                 <TableCell>
-                                    {editingCategoryId === category.id ? (
-                                        <TextField
-                                            value={editingDescription}
-                                            onChange={(e) => setEditingDescription(e.target.value)}
-                                            variant="standard"
-                                        />
-                                    ) : (
-                                        category.description || '—'
-                                    )}
+                                    <TextField
+                                        variant="standard"
+                                        value={descriptionInput}
+                                        onChange={(e) => setDescriptionInput(e.target.value)}
+                                        placeholder="New description"
+                                        onKeyDown={handleKeyDown}
+                                    />
                                 </TableCell>
                                 <TableCell align="right">
-                                    {editingCategoryId === category.id ? (
-                                        <>
-                                            <Button size="small" style={{ color: "#451b03" }} onClick={handleSaveEdit}>Save</Button>
-                                            <Button size="small" style={{ color: "#451b03" }} onClick={handleCancelEdit}>Cancel</Button>
-                                        </>
-                                    ) : (
-                                        <IconButton
-                                            sx={{ color: 'var(--text-color)' }}
-                                            size="small"
-                                            aria-label="Edit Category"
-                                            onClick={() => handleEditCategory(category)}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
-                                    )}
+                                    <Button
+                                        onClick={handleAddCategory}
+                                        size="small"
+                                        disabled={!categoryInput.trim()}
+                                        style={{ color: "#451b03" }}
+                                    >
+                                        Add
+                                    </Button>
                                 </TableCell>
                             </TableRow>
-                        ))}
 
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div >
+
+                            {sortedCategories.map((category) => (
+                                <TableRow key={category.id}>
+                                    <TableCell>
+                                        {editingCategoryId === category.id ? (
+                                            <TextField
+                                                value={editingName}
+                                                onChange={(e) => setEditingName(e.target.value)}
+                                                variant="standard"
+                                                onKeyDown={handleKeyDown}
+                                            />
+                                        ) : (
+                                            category.name
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {editingCategoryId === category.id ? (
+                                            <TextField
+                                                value={editingDescription}
+                                                onChange={(e) => setEditingDescription(e.target.value)}
+                                                variant="standard"
+                                                onKeyDown={handleKeyDown}
+                                            />
+                                        ) : (
+                                            category.description || '—'
+                                        )}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        {editingCategoryId === category.id ? (
+                                            <>
+                                                <Button size="small" style={{ color: "#451b03" }} onClick={handleSaveEdit}>Save</Button>
+                                                <Button size="small" style={{ color: "#451b03" }} onClick={handleCancelEdit}>Cancel</Button>
+                                            </>
+                                        ) : (
+                                            <IconButton
+                                                sx={{ color: 'var(--text-color)' }}
+                                                size="small"
+                                                aria-label="Edit Category"
+                                                onClick={() => handleEditCategory(category)}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div >
+        </div>
     );
 }
