@@ -13,14 +13,16 @@ export class CategoryService {
 
         const category = this.categoryRepo.create({
             name,
-            description: description || null, // Ensure description is optional
+            description: description || null,
         });
 
         return await this.categoryRepo.save(category);
     }
 
     async getAllCategories() {
-        return await this.categoryRepo.find();
+        return await this.categoryRepo.find({
+            order: { name: "DESC" },
+        });
     }
 
     async updateCategory(id: number, updates: { name?: string; description?: string }) {
