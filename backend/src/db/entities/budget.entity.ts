@@ -1,21 +1,15 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { Category } from "../entities/categorie.entity"; // Adjust the path as necessary
 
 @Entity('budget')
 export class Budget {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column()
-    category: string;
+    @ManyToOne(() => Category)
+    @JoinColumn({ name: "category_id" })
+    category: Category;
 
     @Column({ type: 'decimal' })
     limit: number;
-
-    @Column({ type: 'decimal' })
-    spent: number;
-
-    @ManyToOne(() => User, (user) => user.budgets, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'user_id' })
-    user: User;
 }

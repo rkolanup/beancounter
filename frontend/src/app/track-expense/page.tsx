@@ -142,7 +142,6 @@ export default function TrackExpensePage() {
                 amount: "",
                 notes: "",
             });
-            setSelectedCategory(null);
             setFormTouched(false);
         } catch (err) {
             console.error("Failed to save transaction", err);
@@ -155,7 +154,7 @@ export default function TrackExpensePage() {
     }));
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex justify-center min-h-screen">
             <div className="max-w-6xl mx-auto space-y-8">
                 {/* Form Card */}
                 <div className="p-6 bg-white shadow rounded-2xl">
@@ -207,14 +206,21 @@ export default function TrackExpensePage() {
 
                             <TextField name="notes" label="Notes" value={formData.notes} onChange={handleChange} sx={{ flex: 1 }} />
 
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="w-32 h-12 bg-amber-950 text-white rounded-lg hover:bg-amber-900 transition"
-                                >
-                                    Submit
-                                </button>
-                            </div>
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                sx={{
+                                    width: 128,
+                                    height: 48,
+                                    backgroundColor: '#451a03',
+                                    '&:hover': { backgroundColor: '#78350f' },
+                                    textTransform: "none",
+                                    borderRadius: 2,
+                                }}
+                            >
+                                Submit
+                            </Button>
                         </Box>
                     </Box>
                 </div>
@@ -285,5 +291,4 @@ export default function TrackExpensePage() {
             </div>
         </div>
     );
-
 }

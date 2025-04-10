@@ -12,16 +12,20 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     const handleDrawerClose = () => setOpen(false);
 
     return (
-        <div className="flex">
+        <div className="flex justify-center">
             <CssBaseline />
             <Header open={open} handleDrawerOpen={handleDrawerOpen} />
             <SideNav open={open} handleDrawerClose={handleDrawerClose} />
-
             <Box
                 component="main"
                 sx={{
                     flexGrow: 1,
                     p: 3,
+                    mt: 12, // Top margin
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start", // Changed from "center" to start aligning below header
+                    minHeight: "100vh",
                     transition: (theme) =>
                         theme.transitions.create("margin", {
                             easing: open
@@ -33,9 +37,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                         }),
                     marginLeft: open ? "0px" : `-${240}px`,
                 }}
+                className="MuiBox-root" // Optional: force override if needed
             >
                 <Toolbar />
-                <div>{children}</div>
+                <Box sx={{ width: "100%", maxWidth: "1200px" }}>
+                    {children}
+                </Box>
             </Box>
         </div>
     );

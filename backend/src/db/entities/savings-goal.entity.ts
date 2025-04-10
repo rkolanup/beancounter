@@ -17,8 +17,4 @@ export class SavingsGoal {
 
     @Column({ name: "deadline", type: "date" })
     deadline: Date;
-
-    @ManyToOne(() => User, (user) => user.savingsGoals, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'user_id' })
-    user: User;
 }

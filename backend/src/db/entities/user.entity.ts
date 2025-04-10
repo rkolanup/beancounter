@@ -21,12 +21,6 @@ export class User {
     @Column()
     password: string;
 
-    @OneToMany(() => Budget, (budget) => budget.user)
-    budgets: Budget[];
-
-    @OneToMany(() => SavingsGoal, (goal) => goal.user)
-    savingsGoals: SavingsGoal[];
-
     @OneToMany(() => Bill, (bill) => bill.user)
     bills: Bill[];
 

@@ -23,6 +23,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import CategoryIcon from "@mui/icons-material/Category";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PaymentIcon from '@mui/icons-material/Payment';
+import CalculateIcon from '@mui/icons-material/Calculate'
 import Link from "next/link";
 
 interface SideNavProps {
@@ -40,8 +41,9 @@ export default function SideNav({ open, handleDrawerClose }: SideNavProps) {
 
     const navItems = [
         { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-        { text: "Categories", icon: <CategoryIcon />, path: "/category" },
         { text: "Expense Tracker", icon: <AttachMoneyIcon />, path: "/track-expense" },
+        { text: "Categories", icon: <CategoryIcon />, path: "/category" },
+        { text: "Budget", icon: <CalculateIcon />, path: "/budget" },
         { text: "Loan Summary", icon: <PaymentIcon />, path: "/loan-summary" },
     ];
 
