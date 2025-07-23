@@ -43,9 +43,8 @@
 
 ---
 
-### Clone the Repo
-
 ```bash
+### Clone the Repo
 git clone https://github.com/your-username/beancounter.git
 cd beancounter
 
