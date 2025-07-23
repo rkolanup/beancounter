@@ -1,6 +1,6 @@
 # 🏦 Bean-counter
 
-A full-stack **Personal Finance Manager** for tracking income, expenses, and budgeting goals. This project uses **MongoDB, GraphQL, and Express.js** on the backend, while the frontend is built with **Nest.js, Tailwind CSS, and PrimeNG**.
+A full-stack **Personal Finance Manager** for tracking income, expenses, and budgeting goals. This project uses **MongoDB, GraphQL, and Express.js** on the backend, while the frontend is built with **Next.js, Tailwind CSS, and PrimeNG**.
 
 ## 🚀 Features
 - ✅ **Expense & Income Tracking**
@@ -21,7 +21,7 @@ A full-stack **Personal Finance Manager** for tracking income, expenses, and bud
 - **JWT Authentication**
 
 ### **Frontend**
-- **Nest.js**
+- **Next.js**
 - **Tailwind CSS**
 - **PrimeNG**
 - **React (Chart.js for visualization)**
