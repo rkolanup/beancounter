@@ -35,3 +35,10 @@ A full-stack **Personal Finance Manager** for tracking income, expenses, and bud
    ```sh
    git clone https://github.com/rkolanup/beancounter.git
    cd bean-counter/backend
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
+3. **Start the development server**
+   ```sh
+   npm run start:dev
