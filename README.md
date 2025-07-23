@@ -1,44 +1,65 @@
-# 🏦 Bean-counter
+# 🫘 BeanCounter
 
-A full-stack **Personal Finance Manager** for tracking income, expenses, and budgeting goals. This project uses **MongoDB, GraphQL, and Express.js** on the backend, while the frontend is built with **Next.js, Tailwind CSS, and PrimeNG**.
-
-## 🚀 Features
-- ✅ **Expense & Income Tracking**
-- 📊 **Budgeting & Savings Goals**
-- 📈 **Graph Visualization (Chart.js)**
-- 🔄 **CRUD Operations with GraphQL**
-- 🌐 **Modern UI with Nest.js, Tailwind, and PrimeNG**
+**BeanCounter** is a full-stack personal finance management app that helps users track income, expenses, budgets, and financial goals with an intuitive UI and secure backend.
 
 ---
 
-## 🛠 Tech Stack
+## ✨ Features
 
-### **Backend**
-- **Express.js**
-- **GraphQL**
-- **MongoDB (Mongoose ODM)**
-- **Node.js**
-- **JWT Authentication**
-
-### **Frontend**
-- **Next.js**
-- **Tailwind CSS**
-- **PrimeNG**
-- **React (Chart.js for visualization)**
+- 🔐 JWT-based Authentication
+- 💸 Track expenses, income, and loans
+- 📊 Visualize spending with charts
+- 🧾 Export transactions as Excel
+- 📚 API documentation with Swagger
+- ⚙️ Admin dashboard (WIP)
 
 ---
 
-## 🏗 Installation & Setup
+## 🧱 Tech Stack
 
-### **Backend Setup (Express + GraphQL + MongoDB)**
-1. **Clone the repository**  
-   ```sh
-   git clone https://github.com/rkolanup/beancounter.git
-   cd bean-counter/backend
-2. **Install dependencies**
-   ```sh
-   npm install
-   ```
-3. **Start the development server**
-   ```sh
-   npm run start:dev
+### Frontend
+- Next.js 15
+- React 19
+- MUI (Material UI)
+- Tailwind CSS
+- TypeScript
+- xlsx & file-saver for downloads
+
+### Backend
+- Node.js + Express
+- TypeORM + PostgreSQL
+- JWT Auth
+- Swagger for API docs
+- TypeScript
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js >= 18
+- PostgreSQL
+- npm or yarn
+
+---
+
+### Clone the Repo
+
+```bash
+git clone https://github.com/your-username/beancounter.git
+cd beancounter
+
+### Backend Setup
+cd backend
+cp .env.example .env   # Update with DB credentials
+
+npm install
+npm run build
+npm run migration:run
+npm run start:dev
+
+### frontend Setup
+cd frontend
+npm install
+npm run dev
+
